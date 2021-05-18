@@ -3,7 +3,7 @@ const dropZone = {
   $input: document.querySelector('input'),
   files: null,
   DOMContentLoaded() {
-    ['dragover', 'dragleave', 'drop', 'click'].forEach(eventName => {
+    ['dragover', 'dragleave', 'drop', 'click'].forEach((eventName) => {
       this.$dropZone.addEventListener(eventName, this.onDropZone.bind(this));
     });
     this.$input.addEventListener('change', (e) => {
@@ -13,7 +13,7 @@ const dropZone = {
   },
   onDropZone(e) {
     e.preventDefault();
-    switch(e.type) {
+    switch (e.type) {
       case 'dragover':
         this.$dropZone.classList.add('drop-zone_active');
         break;
@@ -29,23 +29,23 @@ const dropZone = {
     }
   },
   processFiles() {
-    let fileType = this.files[0].type;
-    lat validExtensions = ['image/png', 'image/jpeg', 'image/jpg'];
+    const fileType = this.files[0].type;
+    const validExtensions = ['image/png', 'image/jpeg', 'image/jpg'];
     if (validExtensions.includes(fileType)) {
-      let fileReader = new FileReader();
+      const fileReader = new FileReader();
       fileReader.onload = () => {
         // это base64 формат изображения
-        let fileURL = fileReader.result;
-        // создание тега img и пережача выбранного польз. исх. файла и атрибут src
-        let imgSrc = `<img src="${fileURL}" alt=""`;
-        // добавление только что создданого img tag в dropZone контейнер
+        const fileURL = fileReader.result;
+        // создание тега img и передача выбранного польз. исх. файла и атрибут src
+        const imgTag = `<img src="${fileURL}" alt=""`;
+        // добавление только что созданного img tag в dropZone контейнер
         this.$dropZone.innerHTML = imgTag;
-      }
-      fileReader.readAsDataURL(files[0]);
+      };
+      fileReader.readAsDataURL(this.files[0]);
     } else {
       this.$dropZone.classList.remove('drop-zone_active');
     }
-  }
-}
+  },
+};
 
 document.addEventListener('DOMContentLoaded', dropZone.DOMContentLoaded.bind(dropZone));
