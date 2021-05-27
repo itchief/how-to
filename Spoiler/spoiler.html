@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Spoiler</title>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+      document.addEventListener('click', function (e) {
+        const $target = e.target;
+        if (!$target.classList.contains('spoiler__header')) {
+          return;
+        }
+        const $spoiler = $target.closest('.spoiler');
+        if ($spoiler.classList.contains('sliding')) {
+          $spoiler.classList.remove('sliding');
+          if ($spoiler.classList.contains('up')) {
+            $spoiler.classList.add('hide');
+          }
+          return;
+        }
+        if ($spoiler.classList.contains('spoiler_hide')) {
+          slideDown($spoiler);
+        } else {
+          slideUp($spoiler);
+        }
+      })
+
+      function slideDown($spoiler) {
+        if (!$spoiler.classList.contains('spoiler_hide')) return;
+        $spoiler.classList.remove('spoiler_hide');
+        const $spoilerContent = $spoiler.querySelector('.spoiler__content');
+        const height = $spoilerContent.offsetHeight;
+        $spoilerContent.style.overflow = 'hidden';
+        $spoilerContent.style.height = 0;
+        $spoilerContent.style.paddingTop = 0;
+        $spoilerContent.style.marginTop = 0;
+        $spoilerContent.style.marginBottom = 0;
+        $spoilerContent.offsetHeight;
+        $spoiler.classList.add('sliding', 'down');
+        $spoilerContent.style.height = height + 'px';
+        $spoilerContent.style.removeProperty('padding-top');
+        $spoilerContent.style.removeProperty('padding-bottom');
+        $spoilerContent.style.removeProperty('margin-top');
+        $spoilerContent.style.removeProperty('margin-bottom');
+
+        function endSliding() {
+          $spoiler.classList.remove('sliding', 'down');
+          $spoilerContent.style.removeProperty('height');
+          $spoilerContent.style.removeProperty('overflow');
+          $spoilerContent.removeEventListener('transitionend', endSliding);
+        }
+        $spoilerContent.addEventListener('transitionend', endSliding);
+      }
+
+      function slideUp($spoiler) {
+        if ($spoiler.classList.contains('spoiler_hide')) return;
+        $spoiler.classList.add('sliding', 'up');
+        const $spoilerContent = $spoiler.querySelector('.spoiler__content');
+        const height = $spoilerContent.offsetHeight;
+        $spoilerContent.style.height = height + 'px';
+        $spoilerContent.offsetHeight;
+        $spoilerContent.style.overflow = 'hidden';
+        $spoilerContent.style.height = 0;
+        $spoilerContent.style.paddingTop = 0;
+        $spoilerContent.style.marginTop = 0;
+        $spoilerContent.style.marginBottom = 0;
+
+        function endSliding() {
+          $spoiler.classList.add('spoiler_hide');
+          $spoiler.classList.remove('sliding', 'up');
+          $spoilerContent.style.removeProperty('height');
+          $spoilerContent.style.removeProperty('overflow');
+          $spoilerContent.style.removeProperty('padding-top');
+          $spoilerContent.style.removeProperty('padding-bottom');
+          $spoilerContent.style.removeProperty('margin-top');
+          $spoilerContent.style.removeProperty('margin-bottom');
+          $spoilerContent.style.removeProperty('height');
+          $spoilerContent.removeEventListener('transitionend', endSliding);
+        }
+        $spoilerContent.addEventListener('transitionend', endSliding);
+      }
+    });
+  </script>
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+      font-size: 1rem;
+      font-weight: 400;
+      line-height: 1.5;
+      color: #212529;
+      background-color: #fff;
+      -webkit-text-size-adjust: 100%;
+      -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    }
+
+    .spoiler {
+      padding: 15px 15px 0 15px;
+      border: 1px solid #eee;
+      border-radius: 5px;
+    }
+
+    .spoiler__header {
+      font-weight: bold;
+      cursor: pointer;
+      padding-bottom: 15px;
+    }
+
+    .spider__content {
+      padding-bottom: 15px;
+    }
+
+    .spoiler__content :first-child {
+      margin-top: 0;
+    }
+
+    .spoiler__content :last-child {
+      margin-bottom: 0;
+    }
+
+    .spoiler_hide .spoiler__content {
+      display: none;
+    }
+
+    .spoiler.sliding .spoiler__content {
+      transition-property: height, margin, padding;
+      transition-duration: 5s;
+    }
+  </style>
+</head>
+
+<body style="padding: 50px;">
+
+  <div class="spoiler spoiler_hide">
+    <div class="spoiler__header">Заголовок</div>
+    <div class="spoiler__content">
+      <p>Текст...</p>
+      <p>Текст...</p>
+      <p>Текст...</p>
+      <p>Текст...</p>
+      <p>Текст...</p>
+      <p>Текст...</p>
+      <p>Текст...</p>
+    </div>
+  </div>
+
+  <script>
+    /*$('spoiler__header').click(function(){
+      $(this).closest('.spoiler').toggleClass('spoiler_hide').find('.spoiler__content').slideToggle();
+      $(this).next('.spoiler__content').slideToggle();
+    })*/
+  </script>
+
+</body>
+
+</html>
