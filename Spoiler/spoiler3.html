@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Spoiler</title>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      /* plain JS slideToggle https://github.com/ericbutler555/plain-js-slidetoggle */
+
+      function slideToggle(el, duration, callback) {
+        if (el.clientHeight === 0) {
+          _s(el, duration, callback, true);
+        } else {
+          _s(el, duration, callback);
+        }
+      }
+
+      function slideUp(el, duration, callback) {
+        _s(el, duration, callback);
+      }
+
+      function slideDown(el, duration, callback) {
+        _s(el, duration, callback, true);
+      }
+
+      function _s(el, duration, callback, isDown) {
+
+        if (typeof duration === 'undefined') duration = 400;
+        if (typeof isDown === 'undefined') isDown = false;
+
+        el.style.overflow = "hidden";
+        if (isDown) el.style.display = "block";
+
+        var elStyles = window.getComputedStyle(el);
+
+        var elHeight = parseFloat(elStyles.getPropertyValue('height'));
+        var elPaddingTop = parseFloat(elStyles.getPropertyValue('padding-top'));
+        var elPaddingBottom = parseFloat(elStyles.getPropertyValue('padding-bottom'));
+        var elMarginTop = parseFloat(elStyles.getPropertyValue('margin-top'));
+        var elMarginBottom = parseFloat(elStyles.getPropertyValue('margin-bottom'));
+
+        var stepHeight = elHeight / duration;
+        var stepPaddingTop = elPaddingTop / duration;
+        var stepPaddingBottom = elPaddingBottom / duration;
+        var stepMarginTop = elMarginTop / duration;
+        var stepMarginBottom = elMarginBottom / duration;
+
+        var start;
+
+        function step(timestamp) {
+
+          if (start === undefined) start = timestamp;
+
+          var elapsed = timestamp - start;
+
+          if (isDown) {
+            el.style.height = (stepHeight * elapsed) + "px";
+            el.style.paddingTop = (stepPaddingTop * elapsed) + "px";
+            el.style.paddingBottom = (stepPaddingBottom * elapsed) + "px";
+            el.style.marginTop = (stepMarginTop * elapsed) + "px";
+            el.style.marginBottom = (stepMarginBottom * elapsed) + "px";
+          } else {
+            el.style.height = elHeight - (stepHeight * elapsed) + "px";
+            el.style.paddingTop = elPaddingTop - (stepPaddingTop * elapsed) + "px";
+            el.style.paddingBottom = elPaddingBottom - (stepPaddingBottom * elapsed) + "px";
+            el.style.marginTop = elMarginTop - (stepMarginTop * elapsed) + "px";
+            el.style.marginBottom = elMarginBottom - (stepMarginBottom * elapsed) + "px";
+          }
+
+          if (elapsed >= duration) {
+            el.style.height = "";
+            el.style.paddingTop = "";
+            el.style.paddingBottom = "";
+            el.style.marginTop = "";
+            el.style.marginBottom = "";
+            el.style.overflow = "";
+            if (!isDown) el.style.display = "none";
+            if (typeof callback === 'function') callback();
+          } else {
+            window.requestAnimationFrame(step);
+          }
+        }
+
+        window.requestAnimationFrame(step);
+      }
+
+      const $spoiler = document.querySelector('.spoiler__content');
+
+      document.addEventListener('click', function (e) {
+        const $target = e.target;
+        if (!$target.classList.contains('spoiler__header')) {
+          return;
+        }
+        slideToggle($spoiler, 500);
+      })
+
+
+
+    });
+  </script>
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      :root {
+        scroll-behavior: smooth;
+      }
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+      font-size: 1rem;
+      font-weight: 400;
+      line-height: 1.5;
+      color: #212529;
+      background-color: #fff;
+      -webkit-text-size-adjust: 100%;
+      -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    }
+
+    p {
+      margin-top: 0;
+      margin-bottom: 1rem;
+    }
+
+    .spoiler {
+      border: 1px solid #eee;
+      border-radius: 5px;
+    }
+
+    .spoiler__header {
+      font-weight: bold;
+      cursor: pointer;
+      margin: 15px;
+    }
+
+    .spoiler__content:not(.show) {
+      display: none;
+    }
+
+    .spoiler__content.collapsing {
+      height: 0;
+      overflow: hidden;
+      transition: height 7.35s ease;
+    }
+
+    .spoiler__body {
+      padding: 1rem 1.25rem;
+    }
+  </style>
+</head>
+
+<body style="padding: 50px;">
+
+  <div class="spoiler">
+    <div class="spoiler__header">Заголовок</div>
+    <div class="spoiler__content collapse">
+      <div class="spoiler__body">
+        <p>Текст...</p>
+        <p>Текст...</p>
+        <p>Текст...</p>
+        <p>Текст...</p>
+        <p>Текст...</p>
+        <p>Текст...</p>
+        <p>Текст...</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /*$('spoiler__header').click(function(){
+      $(this).closest('.spoiler').toggleClass('spoiler_hide').find('.spoiler__content').slideToggle();
+      $(this).next('.spoiler__content').slideToggle();
+    })*/
+  </script>
+
+</body>
+
+</html>
